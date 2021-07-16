@@ -1,22 +1,24 @@
+import { useAuth } from "../../context/auth-context";
 
 export const LoginScreen = () => {
-    const apiUrl = process.env.REACT_APP_API_URL;
+    // const apiUrl = process.env.REACT_APP_API_URL;
 
-    const login = (param: {username: string, password: string}) => {
-        fetch(`${apiUrl}/login`, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(param)
-        }).then(
-            async (response: Response) => {
-                if (response.ok) {
+    // const login = (param: {username: string, password: string}) => {
+    //     fetch(`${apiUrl}/login`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-type': 'application/json'
+    //         },
+    //         body: JSON.stringify(param)
+    //     }).then(
+    //         async (response: Response) => {
+    //             if (response.ok) {
                     
-                }
-            }
-        )
-    }
+    //             }
+    //         }
+    //     )
+    // }
+    const {login, user} = useAuth();
 
     // 鸭子类型(duck typing)：面向接口编程 而不是 面向对象编程
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -26,6 +28,7 @@ export const LoginScreen = () => {
         login({username, password});
     }
     return <form onSubmit={handleSubmit}>
+        {user? <div>登陆成功 user: {user.name}</div> : null}
         <div>
             <label htmlFor="username">用户名</label>
             <input type="text" id={'username'} />
