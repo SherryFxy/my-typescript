@@ -1,4 +1,23 @@
-export const SearchPanel = ({users, param, setParam}) => {
+export interface User {
+    id: number,
+    name: string,
+    email: string,
+    title: string,
+    organization: string,
+    token: string
+}
+
+interface SerchpanelProps {
+    users: User[],
+    param: {
+        name: string,
+        personId: string,
+    },
+    setParam: (param: SerchpanelProps['param']) => void
+}
+
+
+export const SearchPanel = ({users, param, setParam}: SerchpanelProps) => {
     return <form>
         <div>
             {/* setParam(Object.assign({}, param, {name: e.target.value})) */}
