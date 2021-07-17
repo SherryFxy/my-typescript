@@ -3,6 +3,7 @@ import { SearchPanel } from "./search-panel"
 import {useState, useEffect} from 'react';
 import * as qs from 'qs';
 import { cleanObject, useDebounce, useMount } from "../../utils";
+import { useHttp } from "../../utils/http";
 
 /**
  * npm start的时候，process.env读取的是 .env.development，
@@ -21,21 +22,25 @@ export const ProjectListScreen = () => {
 
     const debouncedParam = useDebounce(param, 200);
 
+    const client = useHttp();
+
     useEffect(() => {
+        client('projects', {data: cleanObject(debouncedParam)}).then(setList)
         // fetch(`${apiUrl}/projects?name=${param.name}&personId=${param.personId}`)
-        fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`).then(async response => {
-            if (response.ok) {
-                setList(await response.json())
-            }
-        })
+        // fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`).then(async response => {
+        //     if (response.ok) {
+        //         setList(await response.json())
+        //     }
+        // })
     }, [debouncedParam])
 
     useMount(() => {
-        fetch(`${apiUrl}/users`).then(async response => {
-            if (response.ok) {
-                setUsers(await response.json())
-            }
-        })
+        client('users').then(setUsers);
+        // fetch(`${apiUrl}/users`).then(async response => {
+        //     if (response.ok) {
+        //         setUsers(await response.json())
+        //     }
+        // })
     })
 
     return <div>
