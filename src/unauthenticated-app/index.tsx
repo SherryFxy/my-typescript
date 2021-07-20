@@ -4,8 +4,8 @@ import { RegisterScreen } from "./register"
 import {Card, Divider, Button} from 'antd'
 import styled from '@emotion/styled';
 import logo from '../assets/logo.svg';
-import left from "assets/left.svg";
-import right from "assets/right.svg";
+import left from "../assets/left.svg";
+import right from "../assets/right.svg";
 
 export const UnauthenticatedApp = () => {
     const [isRegister, setIsRegister] = useState(false)
