@@ -19,13 +19,15 @@ interface SerchpanelProps {
 
 
 export const SearchPanel = ({users, param, setParam}: SerchpanelProps) => {
-    return <Form>
-        <div>
+    return <Form style={{marginBottom: '2rem'}} layout={'inline'}>
+        <Form.Item>
             {/* setParam(Object.assign({}, param, {name: e.target.value})) */}
             <Input type="text" value={param.name} onChange={e => setParam({
                 ...param,
                 name: e.target.value
             })} />
+        </Form.Item>
+        <Form.Item>
             <Select value={param.personId} onChange={value => setParam({
                 ...param,
                 personId: value
@@ -35,6 +37,6 @@ export const SearchPanel = ({users, param, setParam}: SerchpanelProps) => {
                     users.map(user => <Select.Option key={user.id} value={user.id}>{user.name}</Select.Option>)
                 }
             </Select>
-        </div>
+        </Form.Item>
     </Form>
 }
