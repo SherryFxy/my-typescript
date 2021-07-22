@@ -1,9 +1,16 @@
 import { List } from "./list"
 import { SearchPanel } from "./search-panel"
-import {useState, useEffect} from 'react';
-import { cleanObject, useDebounce, useMount } from "../../utils";
-import { useHttp } from "../../utils/http";
-import styled from '@emotion/styled'
+import { useState } from 'react';
+import { useDebounce } from "../../utils";
+import { useProjects } from '../../utils/project'
+import { useUsers } from '../../utils/user'
+// import { useHttp } from "../../utils/http";
+import styled from '@emotion/styled';
+
+import { Typography } from 'antd'
+
+// import { useAsync } from '../../utils/use-async'
+
 
 /**
  * npm start的时候，process.env读取的是 .env.development，
@@ -16,37 +23,15 @@ export const ProjectListScreen = () => {
         name: '',
         personId: ''
     })
-    const [users, setUsers] = useState([])
-    const [list, setList] = useState([])
-
     const debouncedParam = useDebounce(param, 200);
-
-    const client = useHttp();
-
-    useEffect(() => {
-        client('projects', {data: cleanObject(debouncedParam)}).then(setList)
-        // fetch(`${apiUrl}/projects?name=${param.name}&personId=${param.personId}`)
-        // fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`).then(async response => {
-        //     if (response.ok) {
-        //         setList(await response.json())
-        //     }
-        // })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedParam])
-
-    useMount(() => {
-        client('users').then(setUsers);
-        // fetch(`${apiUrl}/users`).then(async response => {
-        //     if (response.ok) {
-        //         setUsers(await response.json())
-        //     }
-        // })
-    })
+    const {data: list, isLoading, error } = useProjects(debouncedParam)
+    const {data: users } = useUsers()
 
     return <Container>
         <h1>项目列表</h1>
-        <SearchPanel users={users} param={param} setParam={setParam} />
-        <List users={users} list={list} />
+        <SearchPanel users={users || []} param={param} setParam={setParam} />
+        {error ? <Typography.Text type={"danger"}>{error.message}</Typography.Text> : null}
+        <List loading={isLoading} users={users || []} dataSource={list || []} />
     </Container>
 }
 

@@ -1,20 +1,25 @@
 import {User} from './search-panel';
-import {Table} from 'antd';
+import { Table } from 'antd';
 import dayjs from 'dayjs';
+import {TableProps} from 'antd/es/table'
 
-interface Project{
+export interface Project{
     id: number,
     name: string,
-    personId: number,
+    personId: string,
     organization: string,
     created: number
 }
-interface UserProps{
+// interface UserProps{
+//     users: User[],
+//     list: Project[],
+// }
+
+interface ListProps extends TableProps<Project>{
     users: User[],
-    list: Project[],
 }
 
-export const List = ({users, list}: UserProps) => {
+export const List = ({ users, ...props }: ListProps) => {
     return <Table rowKey={'id'} pagination={false} columns={[
         {
             title: '名称',
@@ -27,7 +32,7 @@ export const List = ({users, list}: UserProps) => {
             title: '负责人',
             render(value, project){
                 return <span>
-                    {users.find(user => user.id === project.personId)?.name || '未知'}
+                    {users.find(user => user.id === Number(project.personId))?.name || '未知'}
                 </span>
             }
         }, {
@@ -38,5 +43,7 @@ export const List = ({users, list}: UserProps) => {
                 </span>
             }
         }
-    ]} dataSource={list} />
+    ]}
+    {...props}
+    />
 }
